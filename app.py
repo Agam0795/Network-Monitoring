@@ -864,16 +864,6 @@ INDEX_HTML = """
                 <a href="/login" id="loginLink" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Login</a>
             </div>
         </div>
-
-        <div class="panel" style="width:98%">
-            <div style="display:flex; flex-wrap:wrap; gap:8px">
-                <img src="/assets/network-performance-monitoring-cpu-memory-disk1.avif" alt="cpu/mem" style="max-height:80px; border-radius:4px"/>
-                <img src="/assets/network-performance-monitoring-network-dashboards.avif" alt="dashboards" style="max-height:80px; border-radius:4px"/>
-                <img src="/assets/network-performance-monitoring-performance-monitors.avif" alt="monitors" style="max-height:80px; border-radius:4px"/>
-                <img src="/assets/network-performance-monitoring-traffic1.avif" alt="traffic" style="max-height:80px; border-radius:4px"/>
-                <img src="/assets/agam.avif" alt="agam" style="max-height:80px; border-radius:4px"/>
-            </div>
-        </div>
     <div class="panel">
       <strong>Uptime:</strong> <span id="uptime">loading...</span>
       &nbsp; | &nbsp; <strong>Top apps (PID -> bytes):</strong> <span id="topapps">loading...</span>
@@ -1437,21 +1427,6 @@ def top_summary():
     devices = sorted(device_usage.items(), key=lambda kv: kv[1], reverse=True)[:10]
     devices_str = [f"{ip}:{bytes}" for ip,bytes in devices]
     return json.dumps({"top_apps": apps_str, "top_devices": devices_str})
-
-@app.route('/assets/<path:filename>')
-def assets(filename):
-    # Whitelist only .avif files in this folder to avoid directory traversal
-    allowed = {
-        'network-performance-monitoring-cpu-memory-disk1.avif',
-        'network-performance-monitoring-network-dashboards.avif',
-        'network-performance-monitoring-performance-monitors.avif',
-        'network-performance-monitoring-traffic1.avif',
-        'agam.avif',
-        'availability.avif',
-    }
-    if filename not in allowed:
-        return abort(404)
-    return send_from_directory(os.path.dirname(__file__), filename, mimetype='image/avif')
 
 @app.route('/config', methods=['GET'])
 def get_config():
